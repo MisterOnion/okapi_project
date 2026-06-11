@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 
 use App\Models\Lead;
 
+use App\Http\Requests\StoreLeadRequest;
+use App\Jobs\ProcessLeadJob;
+use Illuminate\Http\JsonResponse;
+
 class LeadController extends Controller
 {
     public function index() {
@@ -33,10 +37,17 @@ class LeadController extends Controller
         return view('leads.admin');
     }
 
-    public function store() {
-      // --> /ninjas/ (POST)
-      // handle POST request to store a new ninja record in table
-      // validate method
+    public function store(StoreLeadRequest $request) {
+        // --> /ninjas/ (POST)
+        // handle POST request to store a new ninja record in table
+        
+        // validate method
+        // dd($request->validated());  dump and die for debugging
+
+        ProcessLeadJob::dispatch($request->validated());
+        return response()->json([
+            'message' => 'Lead received and being processed in the background',
+        ], 202);
     }
 
     public function destroy() {

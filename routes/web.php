@@ -17,6 +17,7 @@ Route::get('/leads', [LeadController::class, 'index'])->name('leads.index');
 Route::get('/leads/admin', [LeadController::class, 'create'])->name('leads.create');
 Route::get('/leads/{id}', [LeadController::class, 'show'])->name('leads.show');
 
+Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');
 // Route::get('/leads/{id}', function (string $id) {
 //     // return show function in controller
 //     return view('leads.show', ["id" => $id]);

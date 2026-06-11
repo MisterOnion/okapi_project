@@ -11,7 +11,7 @@
             <nav>
                 <h1>Okapi Assessment</h1>
 
-                <a href="/leads" class="btn">
+                <a href="{{route('leads.index')}}" class="btn">
                     Inspect Okapi Leads!
                 </a>
             </nav>
