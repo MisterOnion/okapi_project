@@ -11,8 +11,9 @@
         <header>
             <nav>
                 <h1>Okapi Leads</h1>
-                <a href="/leads">Leads Received</a>
-                <a href="/leads/admin">Admin Dashboard</a>
+                {{-- <a href="/leads">Leads Received</a> --}}
+                <a href="{{ route('leads.index') }}">Leads Received</a>
+                <a href="{{ route('leads.create') }}">Admin Dashboard</a>
             </nav>
         </header>
 

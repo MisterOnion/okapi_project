@@ -1,27 +1,24 @@
 <?php
+declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LeadController;
+// gathers and passes data among diff MVC components
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+// get a full namespace path to the controller class as a string value
+// 'index' auto fires if the request route comes in 
+// now it passes object intead of string id
+// use named routes for easier routing changing, (resource name. page)
+Route::get('/leads', [LeadController::class, 'index'])->name('leads.index');
+Route::get('/leads/admin', [LeadController::class, 'create'])->name('leads.create');
+Route::get('/leads/{id}', [LeadController::class, 'show'])->name('leads.show');
 
-Route::get('/leads', function () {
-    $leads = [
-        ["customer_id" => "1", "customer_name" => "mario", "lead_id" => "mario179", "email" => "mario@email.com"],
-        ["customer_id" => "2", "customer_name" => "luigi", "lead_id" => "luigi017", "email" => "luigi@email.com"],
-        
-    ];
-    // passes data to view
-    return view('leads.main', ["leads" => $leads,]);
-});
-
-Route::get('/leads/admin', function () {
-    return view('leads.admin');
-});
-
-Route::get('/leads/{id}', function ($lead_id) {
-    return view('leads.show', ["lead_id" => $lead_id]);
-});
+// Route::get('/leads/{id}', function (string $id) {
+//     // return show function in controller
+//     return view('leads.show', ["id" => $id]);
+// });
 
