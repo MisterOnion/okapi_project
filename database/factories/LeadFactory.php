@@ -18,6 +18,9 @@ class LeadFactory extends Factory
     public function definition(): array
     {
         // apply lead qualifier logic for test data (task 2)
+        $customer_name = fake()->name();
+        $email = fake()->unique()->safeEmail();
+        $phone_number = $this->malaysianPhoneNumber();
         $bill_rm = fake()->randomFloat(2, 50, 1500);
         $property_type = fake()->randomElement(['landed', 'condo', 'apartment', 'commercial']);
         $roof_type = fake()->randomElement(['tile', 'metal', 'flat', 'concrete']);
@@ -39,6 +42,7 @@ class LeadFactory extends Factory
                 'Labuan',
                 'Putrajaya',
             ]);
+
         
         $qualifier = new \App\Services\LeadQualificationService();
         $status = $qualifier->qualify([
@@ -50,14 +54,16 @@ class LeadFactory extends Factory
 
         // return fake api generated data to populate model
         return [
-            'customer_name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'phone_number' => $this->malaysianPhoneNumber(),
+            'customer_name' => $customer_name,
+            'email' => $email,
+            'phone_number' => $phone_number,
             'monthly_electricity_bill_rm' => $bill_rm,
             'property_type' => $property_type,
             'roof_type' => $roof_type,
             'state' => $state,
             'status' => $status,
+            // 'unique_lead' => unique(['email', 'phone_number', 'monthly_electricity_bill_rm'], 'unique_lead')
+            'unique_lead'   => "{$email}-{$phone_number}-{$bill_rm}"
         ];
     }
     private function malaysianPhoneNumber(): string

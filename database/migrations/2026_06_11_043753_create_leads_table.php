@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('customer_name');
             $table->string('email')->unique;
             $table->string('phone_number', 20);
-            // $table->decimal('monthly_electricity_bill', 10, 2)->comment('Amount in RM');
             $table->decimal('monthly_electricity_bill_rm', 10, 2);
             $table->enum('property_type', ['landed', 'condo', 'apartment', 'commercial']);
             $table->enum('roof_type', ['tile', 'metal', 'flat', 'concrete']);
@@ -39,6 +38,9 @@ return new class extends Migration
                 'Labuan',
                 'Putrajaya',
             ]);
+            // composite unique lead index in DB. (task 3)
+            // just a string, since concat of email, phone_number, and monthly bill
+            $table->string('unique_lead');
             $table->timestamps(); // created_at updated_at 
         });
     }
