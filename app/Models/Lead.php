@@ -20,7 +20,8 @@ class Lead extends Model
         'property_type', 
         'roof_type', 
         'state',
-        'status' // add status for lead qualification (task 2)
+        'status', // add status for lead qualification (task 2)
+        'unique_lead', // to check duplicates (task 3)
     ];
     /** @use HasFactory<\Database\Factories\LeadFactory> */
     use HasFactory;
