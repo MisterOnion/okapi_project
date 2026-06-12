@@ -19,7 +19,8 @@ class Lead extends Model
         'monthly_electricity_bill_rm', 
         'property_type', 
         'roof_type', 
-        'state'
+        'state',
+        'status' // add status for lead qualification (task 2)
     ];
     /** @use HasFactory<\Database\Factories\LeadFactory> */
     use HasFactory;

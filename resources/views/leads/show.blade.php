@@ -11,5 +11,6 @@
         <p>{{ $lead->state }}</p>
         <p><b>Created at: </b>{{ $lead->created_at }}</p>
         <p><b>Updated at: </b> {{ $lead->updated_at}}</p>
+        <p><b>Status: </b> {{ $lead->status}}</p>
     </div>
 </x-layout>

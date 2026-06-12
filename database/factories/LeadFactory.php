@@ -17,15 +17,11 @@ class LeadFactory extends Factory
      */
     public function definition(): array
     {
-        // fake API that populate the model the seed generated data
-        return [
-            'customer_name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'phone_number' => $this->malaysianPhoneNumber(),
-            'monthly_electricity_bill_rm' => fake()->randomFloat(2, 50, 1500),
-            'property_type' => fake()->randomElement(['landed', 'condo', 'apartment', 'commercial']),
-            'roof_type' => fake()->randomElement(['tile', 'metal', 'flat', 'concrete']),
-            'state' => fake()->randomElement([
+        // apply lead qualifier logic for test data (task 2)
+        $bill_rm = fake()->randomFloat(2, 50, 1500);
+        $property_type = fake()->randomElement(['landed', 'condo', 'apartment', 'commercial']);
+        $roof_type = fake()->randomElement(['tile', 'metal', 'flat', 'concrete']);
+        $state = fake()->randomElement([
                 'Johor',
                 'Kedah',
                 'Kelantan',
@@ -42,7 +38,26 @@ class LeadFactory extends Factory
                 'Kuala Lumpur',
                 'Labuan',
                 'Putrajaya',
-            ]),
+            ]);
+        
+        $qualifier = new \App\Services\LeadQualificationService();
+        $status = $qualifier->qualify([
+            'monthly_electricity_bill_rm' => $bill_rm,
+            'property_type' => $property_type,
+            'roof_type' => $roof_type,
+            'state' => $state,
+        ]);
+
+        // return fake api generated data to populate model
+        return [
+            'customer_name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'phone_number' => $this->malaysianPhoneNumber(),
+            'monthly_electricity_bill_rm' => $bill_rm,
+            'property_type' => $property_type,
+            'roof_type' => $roof_type,
+            'state' => $state,
+            'status' => $status,
         ];
     }
     private function malaysianPhoneNumber(): string
