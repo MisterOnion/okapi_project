@@ -14,15 +14,12 @@ Route::get('/', function () {
 // now it passes object intead of string id
 // use named routes for easier routing changing, (resource name. page)
 Route::get('/leads', [LeadController::class, 'index'])->name('leads.index');
-Route::get('/leads/admin', [LeadController::class, 'create'])->name('leads.create');
+// only admins can create
+Route::get('/leads/admin', [LeadController::class, 'create'])->name('leads.admin');
 Route::get('/leads/{id}', [LeadController::class, 'show'])->name('leads.show');
-
 Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');
 
-// Route::get('/leads/{id}', function (string $id) {
-//     // return show function in controller
-//     return view('leads.show', ["id" => $id]);
-// });
+Route::patch('/leads/{id}/status',  [LeadController::class, 'updateStatus'])->name('leads.updateStatus');
 
 Route::get('/emails/customer', function () {
     return view('emails.customer-lead'); 

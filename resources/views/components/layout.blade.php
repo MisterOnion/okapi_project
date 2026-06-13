@@ -13,7 +13,7 @@
                 <h1>Okapi Leads</h1>
                 {{-- <a href="/leads">Leads Received</a> --}}
                 <a href="{{ route('leads.index') }}">Leads Received</a>
-                <a href="{{ route('leads.create') }}">Admin Dashboard</a>
+                <a href="{{ route('leads.admin') }}">Admin Dashboard</a>
                 <a href="{{ route('emails.customer') }}">Customer Email Template</a>
                 <a href="{{ route('emails.internal') }}">Internal Team Email Template</a>
             </nav>
