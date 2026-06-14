@@ -1,6 +1,6 @@
 ## Task 7: Deployment Plan
 
-<u>**Understand the problem**</u>
+**<ins>Understand the problem</ins>**
 - This is a web app 
 - The main objective is to receive leads and send notifications reliably
 - Assuming the total frequency of users sending leads is low
