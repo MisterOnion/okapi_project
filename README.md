@@ -6,7 +6,7 @@
 - Assuming the total frequency of users sending leads is low
 - It only contains text
 
-**<ins>Propose High-Level Design</ins>**
+**<ins>Propose High-Level Design</ins>**\
 There will be 2 primary APIs:
 - Lead receiving API
 - Email Notification sending API
