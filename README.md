@@ -85,7 +85,9 @@ If tailwind functions like @apply does not run, make sure tailwind is installed 
 “npm install -D @tailwindcss/vite” 
 
 And add the dependency with in the “vite.config.js” file
-<img width="600" height="500" alt="image" src="https://github.com/user-attachments/assets/67d87f60-d457-4709-a6d3-674e583de29e" />
+
+<img width="700" height="378" alt="image" src="https://github.com/user-attachments/assets/d06e6f37-43d2-4b6f-b1e3-2a1ae67ee2fe" />
+
 
 **<ins>Running the Project</ins>**
 
