@@ -12,15 +12,24 @@ There will be 2 primary APIs:
 - Email Notification sending API
 
 The infrastructure for deployment is <u>AWS could services.</u>\
+
 The Postgres database will be hosted by <u>AWS Relational Database Service (RDS).</u>\
+
 The Laravel Queue workers will mainly use Redis for processing tasks/jobs due to is asynchronous nature, provided by <u>AWS ElastiCache.</u>\
+
 The environment configuration will be handled by a Virtual Machine via <u>AWS EC2 instances.</u>\
+
 The notification emails will be handled by <u>AWS Simple Email Service.</u>\
+
 For monitoring, logging or general observability, it will be handled by <u>AWS CloudWatch</u> to collect logs and metrics from each individual instance.\
+
 For routing API request, it will be handled using <u>AWS Route 53.</u>\
+
 For managing and distributing traffic loads in case a huge burst of request for data ingestion, it will be handled by <u>AWS Elastic Load Balancing.</u>\
+
 In case of a DDoS attack to overwhelm the EC2 instance, we can use <u>AWS Web Application Firewall</u> to implement rate-limiting mechanism.\
-Lastly, in case the deployment breaks, <u>AWS Backup</u> will ensure database is backed up every day at 1 a.m. to prevent data loss.\
+
+Lastly, in case the deployment breaks, <u>AWS Backup</u> will ensure database is backed up every day at 1 a.m. to prevent data loss.
 
 <img width="600" height="500" alt="image" src="https://github.com/user-attachments/assets/36f5a5f9-ef08-477b-b1f1-4742a72536c3" />
 
