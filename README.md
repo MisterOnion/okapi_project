@@ -43,7 +43,8 @@ Lastly, in case the deployment breaks, <u>AWS Backup</u> will ensure database is
 2.	For task 6, status update function is separate from other fields due to different set of validation rules. While it’s possible to merge the two functions, this branching is fragile, and the intent of the code turns implicit rather than explicit. Harder to its code intent. 
 
 ## Setup Instructions
-**Herd Setup**
+
+**<ins>Herd Setup</ins>**
 Download Herd to manage dependencies for PHP versions and testing environment. Link: https://herd.laravel.com/windows
 
 Follow this video for the complete setup guide for Herd. 
@@ -67,16 +68,15 @@ For a clean install of Laravel 11 dependencies, follow the steps below:
 '''
 4.	Open terminal in VScode and run “herd composer update” in CLI.
 
-**Connecting to Postgres SQL Database**
+**<ins>Connecting to Postgres SQL Database</ins>**
 To connect to PostgreSQL, change the settings in “.env” and “database.php” file according to your Postgres Database settings. Make sure to create your dedicated database in pgAdmin 4 first.
 
-<img width="242" height="286" alt="image" src="https://github.com/user-attachments/assets/52fba4dd-9a85-4563-9dc8-8d90952ffd51" />
+<img width="174" height="125" alt="Screenshot 2026-06-14 214724" src="https://github.com/user-attachments/assets/d07e663f-da99-47ac-beaf-66a43910d382" />
 <img width="462" height="279" alt="image" src="https://github.com/user-attachments/assets/ed845f5f-ec15-41a6-9682-3e62bf4ffe1d" />
 <img width="788" height="388" alt="image" src="https://github.com/user-attachments/assets/6df28cea-992c-40da-985e-791f3acd5177" />
 <img width="797" height="609" alt="image" src="https://github.com/user-attachments/assets/b6e07095-d13b-447b-935c-3d8f2c1d5126" />
 
-
-**Styling**
+**<ins>Styling</ins>**
 If tailwind functions like @apply does not run, make sure tailwind is installed in the Laravel environment by typing the command in the CLI below:
 
 “npm install -D @tailwindcss/vite” 
@@ -84,7 +84,7 @@ If tailwind functions like @apply does not run, make sure tailwind is installed 
 And add the dependency with in the “vite.config.js” file
 <img width="975" height="378" alt="image" src="https://github.com/user-attachments/assets/67d87f60-d457-4709-a6d3-674e583de29e" />
 
-**Running the Project**
+**<ins>Running the Project</ins>**
 After running the previous steps, run “npm run dev” in the terminal of your VScode.
 
 If its running successfully, Herd will provide ways to interact with the test site, like the image below:
