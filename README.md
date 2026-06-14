@@ -62,12 +62,12 @@ For a clean install of Laravel 11 dependencies, follow the steps below:
 2.	It will give you security errors and refuse to install dependencies cause its quite old, so open the project with VScode and find its “composer.json”
 3.	Add the code below under “config”
 
-'''json
+```json
 "audit": {
     "abandoned": "ignore",
     "block-insecure": false
 }
-'''
+```
 
 4.	Open terminal in VScode and run “herd composer update” in CLI.
 
