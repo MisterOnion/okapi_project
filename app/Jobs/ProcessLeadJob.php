@@ -16,6 +16,10 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\DB; // db failsafe
 use Illuminate\Support\Facades\Log; // logging messages
 
+use Illuminate\Support\Facades\Mail; // interface for sending emails using its own api connections
+use App\Mail\InternalLeadNotification;
+use App\Mail\CustomerLeadNotification;
+
 class ProcessLeadJob implements ShouldQueue
 {
     use Queueable;
@@ -59,6 +63,32 @@ class ProcessLeadJob implements ShouldQueue
                     'unique_lead' => "{$this->leadData['email']}-{$this->leadData['phone_number']}-{$this->leadData['monthly_electricity_bill_rm']}"
                 ]);
             });
+
+            // once leads are processsed into DB, pass its newest email field to mailables
+            $lead = Lead::where('email', $this->leadData['email'])->latest()->firstOrFail();
+            
+            try {
+                // can change to queue()
+                Mail::to('team@okapi.com')->send(new InternalLeadNotification($lead));
+                // find logs in storage/logs/laravel.log
+                Log::info('Internal notification email sent', ['lead_id' => $lead->id]);
+            } catch (\Throwable $e) {
+                Log::error('Failed to send internal notification email', [
+                    'lead_id'=>$lead->id,
+                    'error'=>$e->getMessage(),
+                ]);
+            }
+
+            try {
+                Mail::to($lead->email)->send(new CustomerLeadNotification($lead));
+                Log::info('Customer notification email sent', ['lead_id' => $lead->id]);
+            } catch (\Throwable $e) {
+                Log::error('Failed to send customer notification email', [
+                    'lead_id'=>$lead->id,
+                    'email'=>$lead->email,
+                    'error'=>$e->getMessage(),
+                ]);
+            }
 
         } catch (QueryException $e) {
             // this exception only works without background worker
