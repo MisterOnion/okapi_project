@@ -75,8 +75,8 @@ To connect to PostgreSQL, change the settings in “.env” and “database.php�
 
 <img width="300" height="200" alt="Screenshot 2026-06-14 214724" src="https://github.com/user-attachments/assets/d07e663f-da99-47ac-beaf-66a43910d382" />
 <img width="300" height="200" alt="image" src="https://github.com/user-attachments/assets/ed845f5f-ec15-41a6-9682-3e62bf4ffe1d" />
-<img width="788" height="388" alt="image" src="https://github.com/user-attachments/assets/6df28cea-992c-40da-985e-791f3acd5177" />
-<img width="797" height="609" alt="image" src="https://github.com/user-attachments/assets/b6e07095-d13b-447b-935c-3d8f2c1d5126" />
+<img width="600" height="500" alt="image" src="https://github.com/user-attachments/assets/6df28cea-992c-40da-985e-791f3acd5177" />
+<img width="600" height="500" alt="image" src="https://github.com/user-attachments/assets/b6e07095-d13b-447b-935c-3d8f2c1d5126" />
 
 **<ins>Styling</ins>**
 
