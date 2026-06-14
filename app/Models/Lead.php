@@ -25,6 +25,9 @@ class Lead extends Model
     ];
     /** @use HasFactory<\Database\Factories\LeadFactory> */
     use HasFactory;
-}
 
-// Model, View, Controller
+    public function activityLogs()
+    {
+        return $this->hasMany(Audit::class)->orderby('changed_at', 'desc');
+    }
+}

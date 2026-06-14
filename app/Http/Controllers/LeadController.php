@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log; 
 
 use App\Models\Lead;
+use App\Models\Audit;
 
 use App\Http\Requests\StoreLeadRequest;
 use App\Jobs\ProcessLeadJob;
-use Illuminate\Support\Facades\Log; 
+use App\Services\LeadAuditService;
+
 
 class LeadController extends Controller
 {
@@ -24,6 +27,12 @@ class LeadController extends Controller
     public function show(string $id) {
         $lead = Lead::findOrFail($id);
         return view('leads.show', ["lead" => $lead]);
+    }
+
+    public function showAudit() {
+        // pass $logs variable to view
+        $logs = Audit::with('lead')->orderBy('changed_at', 'desc')->paginate(20);
+        return view('leads.audit', ['logs' => $logs]);
     }
 
     // Request injects incoming HTTP request to perform operations 
@@ -60,8 +69,11 @@ class LeadController extends Controller
             'current_status' => $lead->status,
         ]);
 
-        // update sql command
+        // read old status data, then update new status data
+        $oldStatus = $lead->status;
         $lead->update(['status' => $request->status]);
+        
+        app(LeadAuditService::class)->logStatusChange($lead, $oldStatus, $request->status);
 
         Log::info('updateStatus after update', [
             'status_now' => $lead->fresh()->status,
@@ -71,12 +83,47 @@ class LeadController extends Controller
             ->with('success', "Lead #{$id} status updated to {$lead->status}");
     }
 
+    public function update(Request $request, string $id)
+    {
+        // check if inline form has the data, else process stops
+        $request->validate([
+            'customer_name'              => ['required', 'string', 'max:255'],
+            'email'                      => ['required', 'email', 'max:255'],
+            'phone_number'               => ['required', 'string', 'max:20'],
+            'monthly_electricity_bill_rm'=> ['required', 'numeric', 'min:0'],
+            'state'                      => ['required', 'string'],
+            'property_type'              => ['required', 'in:landed,condo,apartment,commercial'],
+            'roof_type'                  => ['required', 'in:tile,metal,flat,concrete'],
+        ]);
+
+        $lead = Lead::findOrFail($id);
+
+        $oldValues = $lead->only([
+            'customer_name', 'email', 'phone_number',
+            'monthly_electricity_bill_rm', 'state', 'property_type', 'roof_type'
+        ]);
+        
+        $updateData = ($request->only([
+            'customer_name', 'email', 'phone_number',
+            'monthly_electricity_bill_rm', 'state', 'property_type', 'roof_type'
+        ]));
+
+        $lead->update($updateData);
+
+        app(LeadAuditService::class)->logFieldChanges($lead, $oldValues, $updateData);
+
+        return redirect()->route('leads.admin')
+            ->with('success', "Lead #{$id} has been updated successfully");
+    }
+
     public function store(StoreLeadRequest $request) {
         // json returns for Postman single data ingestion
         ProcessLeadJob::dispatch($request->validated());
         return response()->json([
             'message' => 'Lead received and being processed in the background',
         ], 202);
+
+        
     }
 
     public function destroy() {
