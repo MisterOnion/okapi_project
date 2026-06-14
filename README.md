@@ -1,66 +1,35 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Task 7: Deployment Plan
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**<u>Understand the problem</u>**
+- This is a web app 
+- The main objective is to receive leads and send notifications reliably
+- Assuming the total frequency of users sending leads is low
+- It only contains text
 
-## About Laravel
+**<u>Propose High-Level Design</u>**
+There will be 2 primary APIs:
+- Lead receiving API
+- Email Notification sending API
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The infrastructure for deployment is <u>AWS could services.</u>\
+The Postgres database will be hosted by <u>AWS Relational Database Service (RDS).</u>\
+The Laravel Queue workers will mainly use Redis for processing tasks/jobs due to is asynchronous nature, provided by <u>AWS ElastiCache.</u>\
+The environment configuration will be handled by a Virtual Machine via <u>AWS EC2 instances.</u>\
+The notification emails will be handled by <u>AWS Simple Email Service.</u>\
+For monitoring, logging or general observability, it will be handled by <u>AWS CloudWatch</u> to collect logs and metrics from each individual instance.\
+For routing API request, it will be handled using <u>AWS Route 53.</u>\
+For managing and distributing traffic loads in case a huge burst of request for data ingestion, it will be handled by <u>AWS Elastic Load Balancing.</u>\
+In case of a DDoS attack to overwhelm the EC2 instance, we can use <u>AWS Web Application Firewall</u> to implement rate-limiting mechanism.\
+Lastly, in case the deployment breaks, <u>AWS Backup</u> will ensure database is backed up every day at 1 a.m. to prevent data loss.\
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<img width="975" height="857" alt="image" src="https://github.com/user-attachments/assets/36f5a5f9-ef08-477b-b1f1-4742a72536c3" />
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**<u>Decisions</u>**
+1.	For task 2, I could directly modify the main “leads” table to insert “status” column since this is a local development. However, in this case, I have create a “add_status_to_leads_table” migration file to insert into the main “leads” table without altering existing test data. Making it easier for logic processing by decoupling it from main table.
+2.	For task 5, creating admin interface requires 2 separate HTTP requests to fetch and update data. JSON and JavaScript were recommended by AI to have instant response to the POST update changes in the database. However, to keep the data manipulation logic in the controller component instead of in view, changes were made to accommodate this such as an update button for sending an explicit request instead of an instant update.
+3.	For task 6, “unique_lead” concatenated field from lead table used for duplicate detection, was initially used to foreign key for audit table. But if “unique_lead” changes, it will affect audit table. So, it is safer reference back the leads “id” field instead.
 
-## Learning Laravel
+**<u>Tradeoffs</u>**
+1.	In task 3, since jobs are process via Laravel’s background worker, detecting and announcing duplicate leads are not possible because background worker “php artisan queue:work” runs continuously with infinite loop. It will eliminate detected duplicate (or problematic) jobs and keep running for new requests. So, due to background worker requirements, the duplicates will fail silently even if its processing logic is still in the controller interface.
+2.	For task 6, status update function is separate from other fields due to different set of validation rules. While it’s possible to merge the two functions, this branching is fragile, and the intent of the code turns implicit rather than explicit. Harder to understand 
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
