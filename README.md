@@ -60,7 +60,7 @@ Since this project requires, PHP 8.3, installed it via Herd.
 For a clean install of Laravel 11 dependencies, follow the steps below:
 1.	Go to herd folder, open CLI, then type and run “composer create-project laravel/laravel:^11.0 okapi_project --ignore-platform-reqs”
 2.	It will give you security errors and refuse to install dependencies cause its quite old, so open the project with VScode and find its “composer.json”
-3.	Add the code below under “config”
+3.	Add the code under “config” in the .json file
 
 ```json
 "audit": {
