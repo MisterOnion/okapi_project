@@ -11,23 +11,23 @@ There will be 2 primary APIs:
 - Lead receiving API
 - Email Notification sending API
 
-The infrastructure for deployment is <u>AWS could services.</u>\
+The infrastructure for deployment is <u>AWS could services.</u>
 
-The Postgres database will be hosted by <u>AWS Relational Database Service (RDS).</u>\
+The Postgres database will be hosted by <u>AWS Relational Database Service (RDS).</u>
 
-The Laravel Queue workers will mainly use Redis for processing tasks/jobs due to is asynchronous nature, provided by <u>AWS ElastiCache.</u>\
+The Laravel Queue workers will mainly use Redis for processing tasks/jobs due to is asynchronous nature, provided by <u>AWS ElastiCache.</u>
 
-The environment configuration will be handled by a Virtual Machine via <u>AWS EC2 instances.</u>\
+The environment configuration will be handled by a Virtual Machine via <u>AWS EC2 instances.</u>
 
-The notification emails will be handled by <u>AWS Simple Email Service.</u>\
+The notification emails will be handled by <u>AWS Simple Email Service.</u>
 
-For monitoring, logging or general observability, it will be handled by <u>AWS CloudWatch</u> to collect logs and metrics from each individual instance.\
+For monitoring, logging or general observability, it will be handled by <u>AWS CloudWatch</u> to collect logs and metrics from each individual instance.
 
-For routing API request, it will be handled using <u>AWS Route 53.</u>\
+For routing API request, it will be handled using <u>AWS Route 53.</u>
 
-For managing and distributing traffic loads in case a huge burst of request for data ingestion, it will be handled by <u>AWS Elastic Load Balancing.</u>\
+For managing and distributing traffic loads in case a huge burst of request for data ingestion, it will be handled by <u>AWS Elastic Load Balancing.</u>
 
-In case of a DDoS attack to overwhelm the EC2 instance, we can use <u>AWS Web Application Firewall</u> to implement rate-limiting mechanism.\
+In case of a DDoS attack to overwhelm the EC2 instance, we can use <u>AWS Web Application Firewall</u> to implement rate-limiting mechanism.
 
 Lastly, in case the deployment breaks, <u>AWS Backup</u> will ensure database is backed up every day at 1 a.m. to prevent data loss.
 
@@ -41,4 +41,70 @@ Lastly, in case the deployment breaks, <u>AWS Backup</u> will ensure database is
 **<ins>Tradeoffs</ins>**
 1.	In task 3, since jobs are process via Laravel’s background worker, detecting and announcing duplicate leads are not possible because background worker “php artisan queue:work” runs continuously with infinite loop. It will eliminate detected duplicate (or problematic) jobs and keep running for new requests. So, due to background worker requirements, the duplicates will fail silently even if its processing logic is still in the controller interface.
 2.	For task 6, status update function is separate from other fields due to different set of validation rules. While it’s possible to merge the two functions, this branching is fragile, and the intent of the code turns implicit rather than explicit. Harder to its code intent. 
+
+## Setup Instructions
+**Herd Setup**
+Download Herd to manage dependencies for PHP versions and testing environment. Link: https://herd.laravel.com/windows
+
+Follow this video for the complete setup guide for Herd. 
+Link:https://www.youtube.com/watch?v=DKnn8TlJ4MA&list=PL4cUxeGkcC9gF5Gez17eHcDIxrpVSBuVt&index=1
+
+Herd will allocate a dedicated folder for your projects.
+<img width="975" height="298" alt="image" src="https://github.com/user-attachments/assets/9ce42934-2a6e-4840-b66a-ed70e29ff6ff" />
+
+Since this project requires, PHP 8.3, installed it via Herd.
+<img width="975" height="257" alt="image" src="https://github.com/user-attachments/assets/24585afa-e048-484c-9ee3-44b9dd3c0cc9" />
+
+For a clean install of Laravel 11 dependencies, follow the steps below:
+1.	Go to herd folder, open CLI, then type and run “composer create-project laravel/laravel:^11.0 okapi_project --ignore-platform-reqs”
+2.	It will give you security errors and refuse to install dependencies cause its quite old, so open the project with VScode and find its “composer.json”
+3.	Add the code below under “config”
+'''json
+"audit": {
+    "abandoned": "ignore",
+    "block-insecure": false
+}
+'''
+4.	Open terminal in VScode and run “herd composer update” in CLI.
+
+**Connecting to Postgres SQL Database**
+To connect to PostgreSQL, change the settings in “.env” and “database.php” file according to your Postgres Database settings. Make sure to create your dedicated database in pgAdmin 4 first.
+
+<img width="242" height="286" alt="image" src="https://github.com/user-attachments/assets/52fba4dd-9a85-4563-9dc8-8d90952ffd51" />
+<img width="462" height="279" alt="image" src="https://github.com/user-attachments/assets/ed845f5f-ec15-41a6-9682-3e62bf4ffe1d" />
+<img width="788" height="388" alt="image" src="https://github.com/user-attachments/assets/6df28cea-992c-40da-985e-791f3acd5177" />
+<img width="797" height="609" alt="image" src="https://github.com/user-attachments/assets/b6e07095-d13b-447b-935c-3d8f2c1d5126" />
+
+
+**Styling**
+If tailwind functions like @apply does not run, make sure tailwind is installed in the Laravel environment by typing the command in the CLI below:
+
+“npm install -D @tailwindcss/vite” 
+
+And add the dependency with in the “vite.config.js” file
+<img width="975" height="378" alt="image" src="https://github.com/user-attachments/assets/67d87f60-d457-4709-a6d3-674e583de29e" />
+
+**Running the Project**
+After running the previous steps, run “npm run dev” in the terminal of your VScode.
+
+If its running successfully, Herd will provide ways to interact with the test site, like the image below:
+<img width="1044" height="513" alt="image" src="https://github.com/user-attachments/assets/2429d5bc-bf57-45f3-866f-7469d2054674" />
+
+If you click on the URL provided, it will open the test environment in your browser.
+<img width="725" height="458" alt="image" src="https://github.com/user-attachments/assets/b188ef6f-bade-4d53-8adc-3c9816a548ad" />
+
+Open a second terminal in your VScode and run “php artisan migrate:fresh --seed” to create the tables in the Postgres Database and populate it with fake data.
+
+To check if the database is populated with fake data, run a few queries in pgAdmin 4 to confirm.
+
+<img width="892" height="524" alt="image" src="https://github.com/user-attachments/assets/ec08f115-b3e7-4173-b7a3-1bdad087f8ef" />
+
+Afterwords, run “php artisan queue:work” to run the background worker and receive any 3rd party data ingestion. 
+Data ingestion can be tested using Postman. 
+The image below an example of a background worker receiving requests successfully.
+ 
+
+After these crucial setups are complete, you should be able to run this project after forking it from GitHub.
+
+
 
