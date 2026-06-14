@@ -22,7 +22,7 @@ For managing and distributing traffic loads in case a huge burst of request for 
 In case of a DDoS attack to overwhelm the EC2 instance, we can use <u>AWS Web Application Firewall</u> to implement rate-limiting mechanism.\
 Lastly, in case the deployment breaks, <u>AWS Backup</u> will ensure database is backed up every day at 1 a.m. to prevent data loss.\
 
-<img width="975" height="857" alt="image" src="https://github.com/user-attachments/assets/36f5a5f9-ef08-477b-b1f1-4742a72536c3" />
+<img width="600" height="500" alt="image" src="https://github.com/user-attachments/assets/36f5a5f9-ef08-477b-b1f1-4742a72536c3" />
 
 **<u>Decisions</u>**
 1.	For task 2, I could directly modify the main “leads” table to insert “status” column since this is a local development. However, in this case, I have create a “add_status_to_leads_table” migration file to insert into the main “leads” table without altering existing test data. Making it easier for logic processing by decoupling it from main table.
@@ -31,5 +31,5 @@ Lastly, in case the deployment breaks, <u>AWS Backup</u> will ensure database is
 
 **<u>Tradeoffs</u>**
 1.	In task 3, since jobs are process via Laravel’s background worker, detecting and announcing duplicate leads are not possible because background worker “php artisan queue:work” runs continuously with infinite loop. It will eliminate detected duplicate (or problematic) jobs and keep running for new requests. So, due to background worker requirements, the duplicates will fail silently even if its processing logic is still in the controller interface.
-2.	For task 6, status update function is separate from other fields due to different set of validation rules. While it’s possible to merge the two functions, this branching is fragile, and the intent of the code turns implicit rather than explicit. Harder to understand 
+2.	For task 6, status update function is separate from other fields due to different set of validation rules. While it’s possible to merge the two functions, this branching is fragile, and the intent of the code turns implicit rather than explicit. Harder to its code intent. 
 
