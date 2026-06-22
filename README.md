@@ -105,12 +105,13 @@ Open a second terminal in your VScode and run “php artisan migrate:fresh --see
 
 To check if the database is populated with fake data, run a few queries in pgAdmin 4 to confirm.
 
-<img width="892" height="524" alt="image" src="https://github.com/user-attachments/assets/ec08f115-b3e7-4173-b7a3-1bdad087f8ef" />
+<img width="700" height="524" alt="image" src="https://github.com/user-attachments/assets/ec08f115-b3e7-4173-b7a3-1bdad087f8ef" />
 
 Afterwords, run “php artisan queue:work” to run the background worker and receive any 3rd party data ingestion. 
 Data ingestion can be tested using Postman. 
 The image below an example of a background worker receiving requests successfully.
  
+<img width="732" height="350" alt="Screenshot 2026-06-12 175942" src="https://github.com/user-attachments/assets/bd6f2b50-c7f8-452c-b876-cfe0a3a854a8" />
 
 After these crucial setups are complete, you should be able to run this project after forking it from GitHub.
 
