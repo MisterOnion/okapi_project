@@ -35,12 +35,13 @@ Lastly, in case the deployment breaks, <u>AWS Backup</u> will ensure database is
 
 **<ins>Decisions</ins>**
 1.	For task 2, I could directly modify the main “leads” table to insert “status” column since this is a local development. However, in this case, I have create a “add_status_to_leads_table” migration file to insert into the main “leads” table without altering existing test data. Making it easier for logic processing by decoupling it from main table.
-2.	For task 5, creating admin interface requires 2 separate HTTP requests to fetch and update data. JSON and JavaScript were recommended by AI to have instant response to the POST update changes in the database. However, to keep the data manipulation logic in the controller component instead of in view, changes were made to accommodate this such as an update button for sending an explicit request instead of an instant update.
-3.	For task 6, “unique_lead” concatenated field from lead table used for duplicate detection, was initially used to foreign key for audit table. But if “unique_lead” changes, it will affect audit table. So, it is safer reference back the leads “id” field instead.
+2.	For task 3, the "unique_field" to detect lead duplication is a concatenation of "email", "phone_number", and "monthly_electricity_bill_rm". This is because the chances of email, phone number and monthly electric bill being duplicates are less likely to occur.
+3.	For task 5, creating admin interface requires 2 separate HTTP requests to fetch and update data. JSON and JavaScript were recommended by AI to have instant response to the POST update changes in the database. However, to keep the data manipulation logic in the controller component instead of in view, changes were made to accommodate this such as an update button for sending an explicit request instead of an instant update.
+4.	For task 6, “unique_lead” concatenated field from lead table used for duplicate detection, was initially used to foreign key for audit table. But if “unique_lead” changes, it will affect audit table. So, it is safer reference back the leads “id” field instead.
 
 **<ins>Tradeoffs</ins>**
 1.	In task 3, since jobs are process via Laravel’s background worker, detecting and announcing duplicate leads are not possible because background worker “php artisan queue:work” runs continuously with infinite loop. It will eliminate detected duplicate (or problematic) jobs and keep running for new requests. So, due to background worker requirements, the duplicates will fail silently even if its processing logic is still in the controller interface.
-2.	For task 6, status update function is separate from other fields due to different set of validation rules. While it’s possible to merge the two functions, this branching is fragile, and the intent of the code turns implicit rather than explicit. Harder to its code intent. 
+2.	For task 6, status update function is separate from other fields due to different set of validation rules. While it’s possible to merge the two functions, this branching is fragile, and the intent of the code turns implicit rather than explicit. Harder to understand its code intent. 
 
 ## Setup Instructions
 
